@@ -60,4 +60,14 @@ class Collectible: SKSpriteNode {
         self.run(actionSequence, withKey: "drop")
     }
 
+    func collected() {
+        let removeFromParent = SKAction.removeFromParent()
+        self.run(removeFromParent)
+    }
+
+    func missed() {
+        let removeFromParent = SKAction.removeFromParent()
+        self.run(removeFromParent)
+    }
+
 }

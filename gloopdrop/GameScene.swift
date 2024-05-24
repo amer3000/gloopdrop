@@ -21,6 +21,8 @@ class GameScene: SKScene {
     var lastPosition: CGPoint?
 
     override func didMove(to view: SKView) {
+        physicsWorld.contactDelegate = self
+
         let background = SKSpriteNode(imageNamed: "background_1")
         background.anchorPoint = CGPoint(x: 0, y: 0)
         background.zPosition = Layer.background.rawValue
@@ -139,5 +141,28 @@ class GameScene: SKScene {
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+    }
+}
+
+
+extension GameScene: SKPhysicsContactDelegate {
+    func didBegin(_ contact: SKPhysicsContact) {
+        let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+
+        if collision == PhysicsCategory.player | PhysicsCategory.collectible {
+            let body = contact.bodyA.categoryBitMask == PhysicsCategory.collectible ? contact.bodyA.node : contact.bodyB.node
+
+            if let sprite = body as? Collectible {
+                sprite.collected()
+            }
+        }
+
+        if collision == PhysicsCategory.foreground | PhysicsCategory.collectible {
+            let body = contact.bodyA.categoryBitMask == PhysicsCategory.collectible ? contact.bodyA.node : contact.bodyB.node
+
+            if let sprite = body as? Collectible {
+                sprite.missed()
+            }
+        }
     }
 }
