@@ -12,7 +12,7 @@ class GameScene: SKScene {
 
     let player = Player()
     let playerSpeed: CGFloat = 1.5
-    var level: Int = 8
+    var level: Int = 1
     var numberOfDrops: Int = 10
     var dropSpeed: CGFloat = 1.0
     var minDropSpeed: CGFloat = 0.12
@@ -32,6 +32,13 @@ class GameScene: SKScene {
         foreground.anchorPoint = CGPoint(x: 0, y: 0)
         foreground.zPosition = Layer.foreground.rawValue
         foreground.position = CGPoint(x: 0, y: 0)
+        foreground.physicsBody = SKPhysicsBody(edgeLoopFrom: foreground.frame)
+        foreground.physicsBody?.affectedByGravity = false
+        foreground.physicsBody?.categoryBitMask = PhysicsCategory.foreground
+        foreground.physicsBody?.contactTestBitMask = PhysicsCategory.collectible
+        foreground.physicsBody?.collisionBitMask = PhysicsCategory.none
+
+
         addChild(foreground)
         
         player.position = CGPoint(x: size.width/2, y: foreground.frame.maxY)
